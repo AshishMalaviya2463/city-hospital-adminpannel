@@ -32,13 +32,14 @@ const Medicine = () => {
 
   let schema = yup.object().shape({
     name: yup.string().required("Please Enter Name"),
-    price: yup.number().required("Please Enter Price"),
-    quantity: yup.number().required("Please Enter Quantity"),
-    expiry: yup.number().required("Please Enter Expiry Year"),
+    deg: yup.string().required("Please Enter Degree"),
+    age: yup.number().required("Please Enter Age"),
+    experience: yup.number().required("Please Enter Experiance Year"),
+    status: yup.boolean().required("Please Enter Available Status."),
   })
 
   const loadData = () => {
-    let localD = JSON.parse(localStorage.getItem('medicines'));
+    let localD = JSON.parse(localStorage.getItem('doctors'));
     if (localD !== null) {
       setData(localD);
     }
@@ -46,44 +47,46 @@ const Medicine = () => {
 
 
   const addData = (value) => {
-    let localData = JSON.parse(localStorage.getItem("medicines"));
+    let localData = JSON.parse(localStorage.getItem("doctors"));
     value = {
       id: Math.floor(Math.random() * 1000),
       ...value
     }
 
     if (localData === null) {
-      localStorage.setItem('medicines', JSON.stringify([value]))
+      localStorage.setItem('doctors', JSON.stringify([value]))
     } else {
       localData.push(value);
-      localStorage.setItem('medicines', JSON.stringify(localData))
+      localStorage.setItem('doctors', JSON.stringify(localData))
     }
 
     loadData();
   }
 
   const updData = (val) => {
-    let localD = JSON.parse(localStorage.getItem('medicines'));
+    let localD = JSON.parse(localStorage.getItem('doctors'));
 
     localD.map((data) => {
       if (data.id === val.id) {
         data.name = val.name;
-        data.price = val.price;
-        data.quantity = val.quantity;
-        data.expiry = val.expiry;
+        data.deg = val.deg;
+        data.age = val.age;
+        data.experience = val.experience;
+        data.status = val.status;
       }
     })
 
-    localStorage.setItem('medicines', JSON.stringify(localD));
+    localStorage.setItem('doctors', JSON.stringify(localD));
     loadData();
   }
 
   const formik = useFormik({
     initialValues: {
       name: '',
-      price: '',
-      quantity: '',
-      expiry: ''
+      deg: '',
+      age: '',
+      experience: '',
+      status: '',
     },
     validationSchema: schema,
     onSubmit: values => {
@@ -96,9 +99,9 @@ const Medicine = () => {
 
 
   const handleDelete = () => {
-    let localData = JSON.parse(localStorage.getItem('medicines'));
+    let localData = JSON.parse(localStorage.getItem('doctors'));
     let fData = localData.filter((d) => d.id !== params.id);
-    localStorage.setItem('medicines', JSON.stringify(fData));
+    localStorage.setItem('doctors', JSON.stringify(fData));
     setData(fData);
 
     handleAlertClose();
@@ -107,9 +110,10 @@ const Medicine = () => {
 
   const columns = [
     { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'price', headerName: 'Price', width: 130 },
-    { field: 'quantity', headerName: 'Quantity', width: 130 },
-    { field: 'expiry', headerName: 'Expiry', width: 130 },
+    { field: 'deg', headerName: 'Degree', width: 130 },
+    { field: 'age', headerName: 'Age', width: 130 },
+    { field: 'experience', headerName: 'Year of Experience', width: 130 },
+    { field: 'status', headerName: 'Available Status', width: 130 },
     {
       field: 'action', headerName: 'Action',
       renderCell: (params) => (
@@ -145,16 +149,16 @@ const Medicine = () => {
 
   return (
     <>
-      <h1>Medicine</h1>
+      <h1>Doctors</h1>
       <div>
         <Button variant="outlined" onClick={() => {
           setUpdate(false);
           handleClickOpen();
         }} sx={{ marginBottom: '20px' }}>
-          Add Medicines
+          Add Doctor
         </Button>
         <Dialog fullWidth open={openDlg} onClose={handleClose}>
-          <DialogTitle> {update ? 'Update Medicine' : 'Add Medicine'}</DialogTitle>
+          <DialogTitle> {update ? 'Update Doctor' : 'Add Doctor'}</DialogTitle>
           <Formik values={formik}>
             <Form onSubmit={handleSubmit}>
               <DialogContent>
@@ -162,7 +166,7 @@ const Medicine = () => {
                   value={values.name}
                   margin="dense"
                   name="name"
-                  label="Add Medicine"
+                  label="Add Doctor's Name"
                   type="text"
                   fullWidth
                   variant="standard"
@@ -171,43 +175,56 @@ const Medicine = () => {
                 />
                 {errors.name && touched.name ? <p className="error">{errors.name}</p> : ''}
                 <TextField
-                  value={values.price}
+                  value={values.deg}  
                   margin="dense"
-                  name="price"
-                  label="Add Price"
-                  type="number"
+                  name="deg"
+                  label="Degree"
+                  type="text"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.price && touched.price ? <p className="error">{errors.price}</p> : ''}
+                {errors.deg && touched.deg ? <p className="error">{errors.deg}</p> : ''}
 
                 <TextField
-                  value={values.quantity}
+                  value={values.age}
                   margin="dense"
-                  name="quantity"
-                  label="Add Quantity"
+                  name="age"
+                  label="Age"
                   type="number"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.quantity && touched.quantity ? <p className="error">{errors.quantity}</p> : ''}
+                {errors.age && touched.age ? <p className="error">{errors.age}</p> : ''}
 
                 <TextField
-                  value={values.expiry}
+                  value={values.experience}
                   margin="dense"
-                  name="expiry"
-                  label="Add Expiry Year"
-                  type="number"
+                  name="experience"
+                  label="Year of Experience"
+                  type="year"
                   fullWidth
                   variant="standard"
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
-                {errors.expiry && touched.expiry ? <p className="error">{errors.expiry}</p> : ''}
+                {errors.experience && touched.experience ? <p className="error">{errors.experience}</p> : ''}
+
+                <TextField
+                  value={values.status}
+                  margin="dense"
+                  name="status"
+                  label="Available"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
+                {errors.status && touched.status ? <p className="error">{errors.status}</p> : ''}
 
               </DialogContent>
               <DialogActions>

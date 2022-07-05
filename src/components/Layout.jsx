@@ -19,9 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { NavLink } from 'react-router-dom';
-
-
-
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 
 export default function Layout({ children }) {
     const theme = useTheme();
@@ -41,6 +39,9 @@ export default function Layout({ children }) {
     },
     {
         icon: <GroupAddIcon />, name: "Patient", to: '/patient'
+    },
+    {
+        icon: <LocalHospitalIcon />, name: "Doctor", to: '/doctor'
     }
     ]
 
