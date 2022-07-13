@@ -8,10 +8,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Formik, Form, useFormik } from 'formik';
 import * as yup from 'yup';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
+import { IconButton, InputBase, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
+import SearchIcon from '@mui/icons-material/Search';
 
 const Medicine = () => {
 
@@ -20,6 +20,8 @@ const Medicine = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState();
   const [update, setUpdate] = useState(false);
+  const [search , setSearch] = useState([]);
+
 
   const handleClickOpen = () => {
     setOpenDlg(true);
@@ -44,7 +46,6 @@ const Medicine = () => {
       setData(localD);
     }
   }
-
 
   const addData = (value) => {
     let localData = JSON.parse(localStorage.getItem("doctors"));
@@ -97,7 +98,6 @@ const Medicine = () => {
 
   const { handleSubmit, handleBlur, errors, touched, handleChange, values } = formik;
 
-
   const handleDelete = () => {
     let localData = JSON.parse(localStorage.getItem('doctors'));
     let fData = localData.filter((d) => d.id !== params.id);
@@ -136,16 +136,30 @@ const Medicine = () => {
     }
   ];
 
-
-
   useEffect(() => {
     loadData();
   }, [])
 
-
   const handleAlertClose = () => {
     setOpen(false);
   };
+
+  const handleSearch = (val) => {
+    let localData = JSON.parse(localStorage.getItem('doctors'));
+
+    let srData = localData.filter((d) => (
+      d.name.toLowerCase().includes(val.toLowerCase()) || 
+      d.deg.toLowerCase().includes(val.toLowerCase()) || 
+      d.age.toString().includes(val.toString()) || 
+      d.experience.toString().includes(val.toString()) ||
+      d.status.toString().includes(val.toString())
+    ));
+
+    console.log(srData);
+    setSearch(srData);
+  }
+
+  const finalData = search.length > 0 ? search : data;
 
   return (
     <>
@@ -157,6 +171,21 @@ const Medicine = () => {
         }} sx={{ marginBottom: '20px' }}>
           Add Doctor
         </Button>
+
+        <Paper
+          component="form"
+          sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search Medicines Here"
+            inputProps={{ 'aria-label': 'search google maps' }}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
         <Dialog fullWidth open={openDlg} onClose={handleClose}>
           <DialogTitle> {update ? 'Update Doctor' : 'Add Doctor'}</DialogTitle>
           <Formik values={formik}>
@@ -242,7 +271,7 @@ const Medicine = () => {
       </div>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={data}
+          rows={finalData}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}

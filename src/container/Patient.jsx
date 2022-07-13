@@ -8,9 +8,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Formik, Form, useFormik } from 'formik';
 import * as yup from 'yup';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
+import { IconButton, InputBase, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 const Patient = () => {
 
@@ -19,6 +21,8 @@ const Patient = () => {
     const [data, setData] = useState([]);
     const [params, setParams] = useState();
     const [update, setUpdate] = useState(false);
+    const [search, setSearch] = useState([]);
+
 
     const handleClickOpen = () => {
         setOpenDlg(true);
@@ -142,6 +146,23 @@ const Patient = () => {
         setOpen(false);
     };
 
+    const handleSearch = (val) => {
+        let localData = JSON.parse(localStorage.getItem('patients'));
+
+        let srData = localData.filter((d) => (
+            d.name.toLowerCase().includes(val.toLowerCase()) ||
+            d.age.toString().includes(val.toString()) ||
+            d.phone.toString().includes(val.toString()) ||
+            d.dob.toString().includes(val.toString())
+        ));
+
+        console.log(srData);
+        setSearch(srData);
+    }
+
+  const finalData = search.length > 0 ? search : data;
+
+
     return (
         <>
             <h1>Patient</h1>
@@ -152,6 +173,22 @@ const Patient = () => {
                 }} sx={{ marginBottom: '20px' }}>
                     Add Patient Detail
                 </Button>
+
+                <Paper
+                    component="form"
+                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+                >
+                    <InputBase
+                        sx={{ ml: 1, flex: 1 }}
+                        placeholder="Search Medicines Here"
+                        inputProps={{ 'aria-label': 'search google maps' }}
+                        onChange={(e) => handleSearch(e.target.value)}
+                    />
+                    <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+                        <SearchIcon />
+                    </IconButton>
+                </Paper>
+
                 <Dialog fullWidth open={openDlg} onClose={handleClose}>
                     <DialogTitle> {update ? 'Update Patient Detail' : 'Add Patient Detail'}</DialogTitle>
                     <Formik values={formik}>
@@ -222,7 +259,7 @@ const Patient = () => {
             </div>
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
-                    rows={data}
+                    rows={finalData}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}

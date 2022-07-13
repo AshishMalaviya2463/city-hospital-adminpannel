@@ -11,6 +11,9 @@ import { DataGrid } from '@mui/x-data-grid';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Paper from '@mui/material/Paper';
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
 
 
 const Medicine = () => {
@@ -20,6 +23,7 @@ const Medicine = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState();
   const [update, setUpdate] = useState(false);
+  const [search , setSearch] = useState([]);
 
   const handleClickOpen = () => {
     setOpenDlg(true);
@@ -143,6 +147,22 @@ const Medicine = () => {
     setOpen(false);
   };
 
+  const handleSearch = (val) => {
+    let localData = JSON.parse(localStorage.getItem('medicines'));
+
+    let srData = localData.filter((d) => (
+      d.name.toLowerCase().includes(val.toLowerCase()) || 
+      d.price.toString().includes(val.toString()) || 
+      d.quantity.toString().includes(val.toString()) || 
+      d.expiry.toString().includes(val.toString())
+    ));
+
+    console.log(srData);
+    setSearch(srData);
+  }
+
+  const finalData = search.length > 0 ? search : data;
+
   return (
     <>
       <h1>Medicine</h1>
@@ -153,6 +173,22 @@ const Medicine = () => {
         }} sx={{ marginBottom: '20px' }}>
           Add Medicines
         </Button>
+
+        <Paper
+          component="form"
+          sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
+        >
+          <InputBase
+            sx={{ ml: 1, flex: 1 }}
+            placeholder="Search Medicines Here"
+            inputProps={{ 'aria-label': 'search google maps' }}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+            <SearchIcon />
+          </IconButton>
+        </Paper>
+
         <Dialog fullWidth open={openDlg} onClose={handleClose}>
           <DialogTitle> {update ? 'Update Medicine' : 'Add Medicine'}</DialogTitle>
           <Formik values={formik}>
@@ -225,7 +261,7 @@ const Medicine = () => {
       </div>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={data}
+          rows={finalData}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
