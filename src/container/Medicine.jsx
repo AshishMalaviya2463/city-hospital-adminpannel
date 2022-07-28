@@ -14,7 +14,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getMedicines } from '../redux/actions/medicine.action';
+import { TailSpin } from 'react-loader-spinner'
 
 const Medicine = () => {
 
@@ -23,7 +25,7 @@ const Medicine = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState();
   const [update, setUpdate] = useState(false);
-  const [search , setSearch] = useState([]);
+  const [search, setSearch] = useState([]);
 
   const handleClickOpen = () => {
     setOpenDlg(true);
@@ -136,10 +138,13 @@ const Medicine = () => {
     }
   ];
 
+  const dispatch = useDispatch()
+  const medicine = useSelector(state => state.medicineState)
 
+  // console.log(medicine)
 
   useEffect(() => {
-    loadData();
+    dispatch(getMedicines());
   }, [])
 
 
@@ -151,9 +156,9 @@ const Medicine = () => {
     let localData = JSON.parse(localStorage.getItem('medicines'));
 
     let srData = localData.filter((d) => (
-      d.name.toLowerCase().includes(val.toLowerCase()) || 
-      d.price.toString().includes(val.toString()) || 
-      d.quantity.toString().includes(val.toString()) || 
+      d.name.toLowerCase().includes(val.toLowerCase()) ||
+      d.price.toString().includes(val.toString()) ||
+      d.quantity.toString().includes(val.toString()) ||
       d.expiry.toString().includes(val.toString())
     ));
 
@@ -166,29 +171,27 @@ const Medicine = () => {
   return (
     <>
       <h1>Medicine</h1>
+      <Button variant="outlined" onClick={() => {
+        setUpdate(false);
+        handleClickOpen();
+      }} sx={{ marginBottom: '20px' }}>
+        Add Medicines
+      </Button>
+      <Paper
+        component="form"
+        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, marginBottom: 1 }}
+      >
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          placeholder="Search Medicines Here"
+          inputProps={{ 'aria-label': 'search google maps' }}
+          onChange={(e) => handleSearch(e.target.value)}
+        />
+        <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+          <SearchIcon />
+        </IconButton>
+      </Paper>
       <div>
-        <Button variant="outlined" onClick={() => {
-          setUpdate(false);
-          handleClickOpen();
-        }} sx={{ marginBottom: '20px' }}>
-          Add Medicines
-        </Button>
-
-        <Paper
-          component="form"
-          sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400 }}
-        >
-          <InputBase
-            sx={{ ml: 1, flex: 1 }}
-            placeholder="Search Medicines Here"
-            inputProps={{ 'aria-label': 'search google maps' }}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-          <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-
         <Dialog fullWidth open={openDlg} onClose={handleClose}>
           <DialogTitle> {update ? 'Update Medicine' : 'Add Medicine'}</DialogTitle>
           <Formik values={formik}>
@@ -259,35 +262,47 @@ const Medicine = () => {
           </Formik>
         </Dialog>
       </div>
-      <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={finalData}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          checkboxSelection
-        />
-      </div>
+      {
+        medicine.isLoading ?
+          // <p>Loading...</p>
+          <TailSpin color="#00BFFF" height={50} width={50} />
+          :
+          medicine.error !== "" ?
+            <p>{medicine.error}</p>
+            :
+            <>
+              <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                  rows={medicine.medicines}
+                  columns={columns}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  checkboxSelection
+                />
+              </div>
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {'Sure ! You Want to Delete ?'}
-        </DialogTitle>
-        <DialogContent>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {'Sure ! You Want to Delete ?'}
+                </DialogTitle>
+                <DialogContent>
 
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleAlertClose}>No</Button>
-          <Button onClick={handleDelete} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleAlertClose}>No</Button>
+                  <Button onClick={handleDelete} autoFocus>
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            </>
+      }
+
     </>
   )
 }
