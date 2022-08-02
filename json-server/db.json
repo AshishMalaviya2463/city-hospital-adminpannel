@@ -1,49 +1,35 @@
 {
-    "medicines": [
-        {
-            "id": 1,
-            "name":"abc",
-            "price":100,
-            "quantity":2500,
-            "expiry":2025
-        },
-        {
-            "id": 2,
-            "name":"xyz",
-            "price":100,
-            "quantity":2500,
-            "expiry":2025
-        },
-        {
-            "id": 3,
-            "name":"pqr",
-            "price":100,
-            "quantity":2500,
-            "expiry":2025
-        },
-        {
-            "id": 4,
-            "name":"mno",
-            "price":100,
-            "quantity":250,
-            "expiry":2025
-        },
-        {
-            "id": 5,
-            "name":"ABC",
-            "price":100,
-            "quantity":2500,
-            "expiry":2025
-        }
-    ],
-    "comments": [
-        {
-            "id": 1,
-            "body": "some comment",
-            "postId": 1
-        }
-    ],
-    "profile": {
-        "name": "typicode"
+  "medicines": [
+    {
+      "id": 5,
+      "name": "ABC",
+      "price": 100,
+      "quantity": 250,
+      "expiry": 2025
+    },
+    {
+      "id": 860,
+      "name": "dolloo",
+      "price": 54,
+      "quantity": 6,
+      "expiry": 65
+    },
+    {
+      "id": 793,
+      "name": "aspirint",
+      "price": 10,
+      "quantity": 120,
+      "expiry": 2026
     }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
 }

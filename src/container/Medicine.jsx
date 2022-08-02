@@ -15,7 +15,7 @@ import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMedicines } from '../redux/actions/medicine.action';
+import { addMedicine, deleteMedicine, getMedicines, updatemedicine } from '../redux/actions/medicine.action';
 import { TailSpin } from 'react-loader-spinner'
 
 const Medicine = () => {
@@ -43,45 +43,51 @@ const Medicine = () => {
     expiry: yup.number().required("Please Enter Expiry Year"),
   })
 
-  const loadData = () => {
-    let localD = JSON.parse(localStorage.getItem('medicines'));
-    if (localD !== null) {
-      setData(localD);
-    }
-  }
+  // const loadData = () => {
+  //   let localD = JSON.parse(localStorage.getItem('medicines'));
+  //   if (localD !== null) {
+  //     setData(localD);
+  //   }
+  // }
 
 
   const addData = (value) => {
-    let localData = JSON.parse(localStorage.getItem("medicines"));
+    // let localData = JSON.parse(localStorage.getItem("medicines"));
     value = {
       id: Math.floor(Math.random() * 1000),
       ...value
     }
 
-    if (localData === null) {
-      localStorage.setItem('medicines', JSON.stringify([value]))
-    } else {
-      localData.push(value);
-      localStorage.setItem('medicines', JSON.stringify(localData))
-    }
+    dispatch(addMedicine(value));
 
-    loadData();
+    // if (localData === null) {
+    //   localStorage.setItem('medicines', JSON.stringify([value]))
+    // } else {
+    //   localData.push(value);
+    //   localStorage.setItem('medicines', JSON.stringify(localData))
+    // }
+
+    // loadData();
   }
 
   const updData = (val) => {
-    let localD = JSON.parse(localStorage.getItem('medicines'));
+    // let localD = JSON.parse(localStorage.getItem('medicines'));
 
-    localD.map((data) => {
-      if (data.id === val.id) {
-        data.name = val.name;
-        data.price = val.price;
-        data.quantity = val.quantity;
-        data.expiry = val.expiry;
-      }
-    })
+    // localD.map((data) => {
+    //   if (data.id === val.id) {
+    //     data.name = val.name;
+    //     data.price = val.price;
+    //     data.quantity = val.quantity;
+    //     data.expiry = val.expiry;
+    //   }
+    // })
 
-    localStorage.setItem('medicines', JSON.stringify(localD));
-    loadData();
+    // localStorage.setItem('medicines', JSON.stringify(localD));
+
+    dispatch(updatemedicine(val))
+    dispatch(getMedicines());
+
+    // loadData();
   }
 
   const formik = useFormik({
@@ -102,13 +108,15 @@ const Medicine = () => {
 
 
   const handleDelete = () => {
-    let localData = JSON.parse(localStorage.getItem('medicines'));
-    let fData = localData.filter((d) => d.id !== params.id);
-    localStorage.setItem('medicines', JSON.stringify(fData));
-    setData(fData);
+    // let localData = JSON.parse(localStorage.getItem('medicines'));
+    // let fData = localData.filter((d) => d.id !== params.id);
+    // localStorage.setItem('medicines', JSON.stringify(fData));
+    // setData(fData);
+
+    dispatch(deleteMedicine(params.id));
 
     handleAlertClose();
-    loadData();
+    // loadData();
   }
 
   const columns = [
@@ -120,7 +128,7 @@ const Medicine = () => {
       field: 'action', headerName: 'Action',
       renderCell: (params) => (
         <>
-          <IconButton aria-label="delete" onClick={() => {
+          <IconButton aria-label="edit" onClick={() => {
             setUpdate(true);
             handleClickOpen();
             formik.setValues(params.row);

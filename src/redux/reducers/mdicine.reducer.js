@@ -15,6 +15,33 @@ export const medicineReducer = (state = initSate, action) => {
                 isLoading: false,
                 medicines: action.payload
             }
+        case ActionTypes.ADD_MEDICINES:
+            return {
+                ...state,
+                isLoading: false,
+                medicines: [...state.medicines, action.payload],
+                error: ""
+            }
+        case ActionTypes.DELETE_MEDICINES:
+            return {
+                ...state,
+                isLoading: false,
+                medicines: state.medicines.filter((m) => m.id !== action.payload),
+                error: ""
+            }
+        case ActionTypes.UPDATE_MEDICINES:
+            return {
+                ...state,
+                isLoading: false,
+                medicines: state.medicines.filter((m) => {
+                    if (m.id === action.payload.id) {
+                        return action.payload;
+                    } else {
+                        return m;
+                    }
+                }),
+                error: ""
+            }
         case ActionTypes.LOADING_MEDICINES:
             return {
                 ...state,
