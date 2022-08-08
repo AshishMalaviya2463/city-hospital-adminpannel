@@ -1,18 +1,11 @@
 {
   "medicines": [
     {
-      "id": 5,
-      "name": "ABC",
-      "price": 100,
-      "quantity": 250,
-      "expiry": 2025
-    },
-    {
       "id": 860,
       "name": "dolloo",
-      "price": 54,
-      "quantity": 6,
-      "expiry": 65
+      "price": 5,
+      "quantity": 100,
+      "expiry": 2026
     },
     {
       "id": 793,

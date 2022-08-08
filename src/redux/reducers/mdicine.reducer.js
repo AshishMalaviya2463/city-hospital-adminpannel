@@ -33,7 +33,7 @@ export const medicineReducer = (state = initSate, action) => {
             return {
                 ...state,
                 isLoading: false,
-                medicines: state.medicines.filter((m) => {
+                medicines: state.medicines.map((m) => {
                     if (m.id === action.payload.id) {
                         return action.payload;
                     } else {

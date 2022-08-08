@@ -22,10 +22,10 @@ const Medicine = () => {
 
   const [openDlg, setOpenDlg] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const [params, setParams] = useState();
   const [update, setUpdate] = useState(false);
-  const [search, setSearch] = useState([]);
+  // const [search, setSearch] = useState([]);
 
   const handleClickOpen = () => {
     setOpenDlg(true);
@@ -85,7 +85,6 @@ const Medicine = () => {
     // localStorage.setItem('medicines', JSON.stringify(localD));
 
     dispatch(updatemedicine(val))
-    dispatch(getMedicines());
 
     // loadData();
   }
@@ -171,10 +170,10 @@ const Medicine = () => {
     ));
 
     console.log(srData);
-    setSearch(srData);
+    // setSearch(srData);
   }
 
-  const finalData = search.length > 0 ? search : data;
+  // const finalData = search.length > 0 ? search : data;
 
   return (
     <>
