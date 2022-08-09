@@ -1,5 +1,5 @@
-import { deleteRequest, getRequest, postRequest, putRequest } from "../../common/medicine.api"
 import *as ActionTypes from "./ationTypes"
+import { getAllMedicineData, deleteMedicineData, updateMedicineData, postMedicineData } from "../../common/apis/medicine.api"
 // import { baseURL } from './baseURL'
 
 export const getMedicines = () => (dispatch) => {
@@ -9,7 +9,7 @@ export const getMedicines = () => (dispatch) => {
 
         setTimeout(() => {
 
-            getRequest()
+            getAllMedicineData()
                 .then((data) => dispatch({ type: ActionTypes.GET_MEDICINES, payload: data.data }))
                 .catch(error => dispatch(errorMedicines(error.message)));
 
@@ -39,7 +39,7 @@ export const getMedicines = () => (dispatch) => {
 export const addMedicine = (data) => (dispatch) => {
     try {
 
-        postRequest(data)
+        postMedicineData(data)
             .then((data) => dispatch({ type: ActionTypes.ADD_MEDICINES, payload: data.data }))
             .catch(error => dispatch(errorMedicines(error.message)));
 
@@ -74,7 +74,7 @@ export const addMedicine = (data) => (dispatch) => {
 export const deleteMedicine = (id) => (dispatch) => {
     try {
 
-        deleteRequest(id)
+        deleteMedicineData(id)
             .then(dispatch({ type: ActionTypes.DELETE_MEDICINES, payload: id }))
             .catch(error => dispatch(errorMedicines(error.message)));
 
@@ -105,7 +105,7 @@ export const deleteMedicine = (id) => (dispatch) => {
 export const updatemedicine = (data) => (dispatch) => {
     try {
 
-        putRequest(data)
+        updateMedicineData(data)
             .then(dispatch({ type: ActionTypes.UPDATE_MEDICINES, payload: data }))
             .catch(error => dispatch(errorMedicines(error.message)));
 
@@ -138,9 +138,9 @@ export const updatemedicine = (data) => (dispatch) => {
 }
 
 export const loadingMedicines = () => (dispatch) => {
-    dispatch({ type: ActionTypes.LOADING_MEDICINES })
+    dispatch({ type: ActionTypes.LOADING })
 }
 
 export const errorMedicines = (data) => (dispatch) => {
-    dispatch({ type: ActionTypes.ERROR_MEDICINES, payload: data })
+    dispatch({ type: ActionTypes.ERROR, payload: data })
 }

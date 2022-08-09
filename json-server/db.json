@@ -15,11 +15,14 @@
       "expiry": 2026
     }
   ],
-  "comments": [
+  "doctors": [
     {
       "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "name": "ashu",
+      "deg": "mbbs",
+      "age": 20,
+      "experience": 2020,
+      "status": "false"
     }
   ],
   "profile": {

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from "react-redux"
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -12,6 +13,7 @@ import { IconButton, InputBase, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
+import { addDoctor, deleteDoctor, getDoctors, updateDoctor } from '../redux/actions/doctor.actions';
 
 const Medicine = () => {
 
@@ -20,8 +22,11 @@ const Medicine = () => {
   const [data, setData] = useState([]);
   const [params, setParams] = useState();
   const [update, setUpdate] = useState(false);
-  const [search , setSearch] = useState([]);
+  const [search, setSearch] = useState([]);
 
+  const doctor = useSelector(state => state.doctorState)
+
+  const dispatch = useDispatch();
 
   const handleClickOpen = () => {
     setOpenDlg(true);
@@ -41,44 +46,51 @@ const Medicine = () => {
   })
 
   const loadData = () => {
-    let localD = JSON.parse(localStorage.getItem('doctors'));
-    if (localD !== null) {
-      setData(localD);
-    }
+    // let localD = JSON.parse(localStorage.getItem('doctors'));
+    // if (localD !== null) {
+    //   setData(localD);
+    // }
+
   }
 
   const addData = (value) => {
-    let localData = JSON.parse(localStorage.getItem("doctors"));
+
+    // let localData = JSON.parse(localStorage.getItem("doctors"));
     value = {
       id: Math.floor(Math.random() * 1000),
       ...value
     }
 
-    if (localData === null) {
-      localStorage.setItem('doctors', JSON.stringify([value]))
-    } else {
-      localData.push(value);
-      localStorage.setItem('doctors', JSON.stringify(localData))
-    }
+    dispatch(addDoctor(value))
 
-    loadData();
+    // if (localData === null) {
+    //   localStorage.setItem('doctors', JSON.stringify([value]))
+    // } else {
+    //   localData.push(value);
+    //   localStorage.setItem('doctors', JSON.stringify(localData))
+    // }
+
+    // loadData();
   }
 
   const updData = (val) => {
-    let localD = JSON.parse(localStorage.getItem('doctors'));
 
-    localD.map((data) => {
-      if (data.id === val.id) {
-        data.name = val.name;
-        data.deg = val.deg;
-        data.age = val.age;
-        data.experience = val.experience;
-        data.status = val.status;
-      }
-    })
+    dispatch(updateDoctor(val))
 
-    localStorage.setItem('doctors', JSON.stringify(localD));
-    loadData();
+    // let localD = JSON.parse(localStorage.getItem('doctors'));
+
+    // localD.map((data) => {
+    //   if (data.id === val.id) {
+    //     data.name = val.name;
+    //     data.deg = val.deg;
+    //     data.age = val.age;
+    //     data.experience = val.experience;
+    //     data.status = val.status;
+    //   }
+    // })
+
+    // localStorage.setItem('doctors', JSON.stringify(localD));
+    // loadData();
   }
 
   const formik = useFormik({
@@ -99,13 +111,15 @@ const Medicine = () => {
   const { handleSubmit, handleBlur, errors, touched, handleChange, values } = formik;
 
   const handleDelete = () => {
-    let localData = JSON.parse(localStorage.getItem('doctors'));
-    let fData = localData.filter((d) => d.id !== params.id);
-    localStorage.setItem('doctors', JSON.stringify(fData));
-    setData(fData);
+    // let localData = JSON.parse(localStorage.getItem('doctors'));
+    // let fData = localData.filter((d) => d.id !== params.id);
+    // localStorage.setItem('doctors', JSON.stringify(fData));
+    // setData(fData);
 
     handleAlertClose();
-    loadData();
+    // loadData();
+
+    dispatch(deleteDoctor(params.id))
   }
 
   const columns = [
@@ -137,7 +151,7 @@ const Medicine = () => {
   ];
 
   useEffect(() => {
-    loadData();
+    dispatch(getDoctors());
   }, [])
 
   const handleAlertClose = () => {
@@ -148,9 +162,9 @@ const Medicine = () => {
     let localData = JSON.parse(localStorage.getItem('doctors'));
 
     let srData = localData.filter((d) => (
-      d.name.toLowerCase().includes(val.toLowerCase()) || 
-      d.deg.toLowerCase().includes(val.toLowerCase()) || 
-      d.age.toString().includes(val.toString()) || 
+      d.name.toLowerCase().includes(val.toLowerCase()) ||
+      d.deg.toLowerCase().includes(val.toLowerCase()) ||
+      d.age.toString().includes(val.toString()) ||
       d.experience.toString().includes(val.toString()) ||
       d.status.toString().includes(val.toString())
     ));
@@ -204,7 +218,7 @@ const Medicine = () => {
                 />
                 {errors.name && touched.name ? <p className="error">{errors.name}</p> : ''}
                 <TextField
-                  value={values.deg}  
+                  value={values.deg}
                   margin="dense"
                   name="deg"
                   label="Degree"
@@ -271,7 +285,7 @@ const Medicine = () => {
       </div>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={finalData}
+          rows={doctor.doctor}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}

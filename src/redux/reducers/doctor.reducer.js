@@ -1,39 +1,39 @@
 import *as ActionTypes from "../actions/ationTypes"
 
 const initSate = {
-    medicines: [],
+    doctor: [],
     isLoading: false,
     error: ''
 }
 
-export const medicineReducer = (state = initSate, action) => {
+export const doctorReducer = (state = initSate, action) => {
     // console.log(action.type, action.payload);
     switch (action.type) {
-        case ActionTypes.GET_MEDICINES:
+        case ActionTypes.GET_DOCTOR:
             return {
                 ...state,
                 isLoading: false,
-                medicines: action.payload
+                doctor: action.payload
             }
-        case ActionTypes.ADD_MEDICINES:
+        case ActionTypes.ADD_DOCTOR:
             return {
                 ...state,
                 isLoading: false,
-                medicines: [...state.medicines, action.payload],
+                doctor: [...state.doctor, action.payload],
                 error: ""
             }
-        case ActionTypes.DELETE_MEDICINES:
+        case ActionTypes.DELETE_DOCTOR:
             return {
                 ...state,
                 isLoading: false,
-                medicines: state.medicines.filter((m) => m.id !== action.payload),
+                doctor: state.doctor.filter((m) => m.id !== action.payload),
                 error: ""
             }
-        case ActionTypes.UPDATE_MEDICINES:
+        case ActionTypes.UPDATE_DOCTOR:
             return {
                 ...state,
                 isLoading: false,
-                medicines: state.medicines.map((m) => {
+                doctor: state.doctor.map((m) => {
                     if (m.id === action.payload.id) {
                         return action.payload;
                     } else {
@@ -51,7 +51,7 @@ export const medicineReducer = (state = initSate, action) => {
             return {
                 ...state,
                 isLoading: false,
-                medicines: [],
+                doctor: [],
                 error: action.payload
             }
         default:
