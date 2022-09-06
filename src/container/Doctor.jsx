@@ -24,7 +24,7 @@ const Medicine = () => {
   const [update, setUpdate] = useState(false);
   const [search, setSearch] = useState([]);
 
-  const doctor = useSelector(state => state.doctorState)
+  const doctor = useSelector(state => state.doctorState.doctor)
 
   const dispatch = useDispatch();
 
@@ -43,6 +43,7 @@ const Medicine = () => {
     age: yup.number().required("Please Enter Age"),
     experience: yup.number().required("Please Enter Experiance Year"),
     status: yup.boolean().required("Please Enter Available Status."),
+    profile_pic: yup.mixed().required("Please select Profile Pcture."),
   })
 
   const loadData = () => {
@@ -56,10 +57,10 @@ const Medicine = () => {
   const addData = (value) => {
 
     // let localData = JSON.parse(localStorage.getItem("doctors"));
-    value = {
-      id: Math.floor(Math.random() * 1000),
-      ...value
-    }
+    // value = {
+    //   id: Math.floor(Math.random() * 1000),
+    //   ...value
+    // }
 
     dispatch(addDoctor(value))
 
@@ -100,6 +101,7 @@ const Medicine = () => {
       age: '',
       experience: '',
       status: '',
+      profile_pic: ''
     },
     validationSchema: schema,
     onSubmit: values => {
@@ -108,7 +110,7 @@ const Medicine = () => {
     enableReinitialize: true,
   });
 
-  const { handleSubmit, handleBlur, errors, touched, handleChange, values } = formik;
+  const { handleSubmit, handleBlur, errors, touched, handleChange, values, setFieldValue } = formik;
 
   const handleDelete = () => {
     // let localData = JSON.parse(localStorage.getItem('doctors'));
@@ -123,13 +125,21 @@ const Medicine = () => {
   }
 
   const columns = [
-    { field: 'name', headerName: 'Name', width: 130 },
-    { field: 'deg', headerName: 'Degree', width: 130 },
-    { field: 'age', headerName: 'Age', width: 130 },
-    { field: 'experience', headerName: 'Year of Experience', width: 130 },
-    { field: 'status', headerName: 'Available Status', width: 130 },
     {
-      field: 'action', headerName: 'Action',
+      field: 'profile_pic', headerName: 'Profile Photo', width: 150, renderCell: (params) => {
+        return (
+          // console.log(params.formattedValue)
+          <img src={params.formattedValue} alt="pp" style={{ width: "60px", height: "60px" }} />
+        )
+      }
+    },
+    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'deg', headerName: 'Degree', width: 100 },
+    { field: 'age', headerName: 'Age', width: 80 },
+    { field: 'experience', headerName: 'Year of Experience', width: 150 },
+    { field: 'status', headerName: 'Available Status', width: 70 },
+    {
+      field: 'action', headerName: 'Action', width: 100,
       renderCell: (params) => (
         <>
           <IconButton aria-label="delete" onClick={() => {
@@ -173,7 +183,7 @@ const Medicine = () => {
     setSearch(srData);
   }
 
-  const finalData = search.length > 0 ? search : data;
+  // const finalData = search.length > 0 ? search : data;
 
   return (
     <>
@@ -269,6 +279,15 @@ const Medicine = () => {
                 />
                 {errors.status && touched.status ? <p className="error">{errors.status}</p> : ''}
 
+                <input
+                  type="file"
+                  name="profile_pic"
+                  id='profile_pic'
+                  onChange={(e) => setFieldValue("profile_pic", e.target.files[0])}
+                />
+                {errors.profile_pic && touched.profile_pic ? <p className="error">{errors.profile_pic}</p> : ''}
+
+
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
@@ -285,7 +304,7 @@ const Medicine = () => {
       </div>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={doctor.doctor}
+          rows={doctor}
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
